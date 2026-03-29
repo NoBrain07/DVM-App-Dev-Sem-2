@@ -1,6 +1,6 @@
 
 
-
+// export to use in script.js
  
 export const events = [
   { id: 1, name: "Rocktaves", category: "Music", day: 1, time: "22:00", venue: "Auditorium", registrations: 1125 },

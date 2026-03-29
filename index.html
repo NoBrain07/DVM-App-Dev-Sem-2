@@ -1,79 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-    
-    <title>Fest Organiser</title>
-  </head>
-  <body>
-    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">   
+    <!-- to link css style to the page -->
+    <title>Events Explorer</title>
+</head>
+<body>
     <div class="wrapper">
-      
-      <header>
-        <h1>Fest Explorer</h1>
-        <p>15 Events, 3 Days</p>
-      </header>
-      
+        <header>
+            <h1>Fest Events Explorer</h1>
+        </header>
 
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-label">Total Events</div>
-          <div class="stat-value" id="statTotal">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Most Popular Category</div>
-          <div class="stat-value" id="statPopular">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Registrations</div>
-          <div class="stat-value" id="statRegs">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Saved in Lineup</div>
-          <div class="stat-value" id="statSaved">0</div>
-        </div>
-      </div>
-      
-      <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search events..." />
-        
-        <div class="filter-sort-row">
-          <div id="filterGroup"></div>
-          <select id="sortSelect">
-            <option value="default">Sort by...</option>
-            <option value="day-asc">Day (ascending)</option>
-            <option value="day-desc">Day (descending)</option>
-            <option value="regs-desc">Registrations (descending)</option>
-            <option value="regs-asc">Registrations (ascending)</option>
-          </select>
-        </div>
-      </div>
-      
+        <div class = "controls">
 
-      <div class="main-layout">
+            <div class="search">
+                <input type="text" id="search-bar" placeholder="Search...">
+            </div>
+            <div class="filter-sort">
+                
+                <div id = "filter-groups"></div>
 
-        <div>
-          <div class="section-header">
-            Events — <span id="countBadge">15</span> shown
-          </div>
-          <div id="eventsGrid"></div>
-          <div id="noResults">No events match your search.</div>
+                <div class="sort-by">
+                    <select name="sort-by-selected" id="sort-by-selected">
+                        <option value="default">Sort By...</option>
+                        <option value="day-asc">Day Ascending</option>
+                        <option value="reg-desc">Registrations Descending</option>
+                    </select>
+                </div>
+            </div>
+            
+            
         </div>
 
-        <div>
-          <div class="section-header">My Lineup</div>
-          <div class="lineup-panel">
-            <div id="lineupList"></div>
-          </div>
+        <div class="main-structure">
+            <div>
+                <div class = "main-heading">
+                    <span id = "event-count">n</span> EVENTS
+                </div>
+                <div id = "events-grid"></div>
+                <div id = "no-results">No Results found</div>
+            </div>
+            
+            <div>
+                <div class = "main-heading">
+                    <span id = "lineup-count">x</span> EVENTS ADDED TO LINEUP
+                </div>
+                <div class="lineup">
+                    <div id = "lineup-grid"></div>
+                    <div id = "empty-lineup"></div>
+                </div>
+            </div>
         </div>
-        
-      </div>
+
     </div>
-    
-      <script type="module" src="script.js"></script>
-  </body>
-  </html>
-  
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

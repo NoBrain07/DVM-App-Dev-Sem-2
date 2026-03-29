@@ -1,244 +1,193 @@
-import { events } from './schedule.js';
+import { events } from "./schedule.js";
+
+let searchValue ='';
+let filteredCategory = 'All';
+let sortSelected = 'default';
+let lineupEvents = new Set();
 
 
-const state = {
-    search : '',
-    category : 'All',
-    sort : 'default',      
-    lineup : new Set()
-};
-
-const maxRegistrations = Math.max(...events.map(function(e) {return e.registrations;}));
-
-const totalCategories = Array.from(new Set(events.map(function(e) {return e.category; })));
+const categories =['All', ...(Array.from(new Set(events.map((e) => e.category))))];
 
 
 
-function buildFilterButtons() {
-    const categories = ['All', ...totalCategories];
-    const filterGroup = document.getElementById('filterGroup');
+function makeFilterButtons(){
+    const filterGroups = document.getElementById('filter-groups');
 
-    filterGroup.innerHTML = ''; 
+    filterGroups.innerHTML = '';  // to remove old buttons and make new buttons
 
-    categories.forEach(function(categ) {
-        const btn = document.createElement('button');
-        btn.className = 'btn' + (categ === state.category ? ' active' : ''); 
-        btn.textContent = categ;
+    categories.forEach(function(c){
+        const button = document.createElement('button');
+        button.className = 'button-' + (c === filteredCategory ? 'active' : 'inactive');
+        button.textContent = c ;
 
-        btn.addEventListener('click', function() {
-            state.category = categ;
-            buildFilterButtons();
-            renderCards();
+        button.addEventListener('click',() => {
+            filteredCategory = c;
+            makeFilterButtons();
+            renderEventCards();
         });
 
-        filterGroup.appendChild(btn);
+        filterGroups.appendChild(button);
+
     });
 }
 
 
+function filterSort(){
+    let filteredEvents = events.filter(function(event){
+        let searchMatch = event.name.toLowerCase().includes(searchValue.toLowerCase()); //match search
+        let sameCategory = filteredCategory === 'All' || event.category === filteredCategory; //Category same
+        return searchMatch && sameCategory
+    })
 
-function getFilteredAndSorted() {
-    let result = events.filter(function(event) {
-        return (event.name.toLowerCase().includes(state.search.toLowerCase())) && (state.category === 'All' || event.category === state.category);
-    });
-
-    if (state.sort === 'day-asc') {
-        result = result.slice().sort(function(a,b) { return a.day - b.day; });
-    } else if (state.sort === 'day-desc') {
-        result = result.slice().sort(function(a,b) { return b.day - a.day; });
-    } else if (state.sort === 'regs-asc') {
-        result = result.slice().sort(function(a,b) { return a.registrations - b.registrations; });
-    } else if (state.sort === 'regs-desc') {
-        result = result.slice().sort(function(a,b) { return b.registrations - a.registrations; });
+    if (sortSelected === 'day-asc'){
+        filteredEvents = filteredEvents.slice().sort((a,b) =>  a.day - b.day);
+    }else if (sortSelected === 'reg-desc') {
+        filteredEvents = filteredEvents.slice().sort((a,b) =>  b.registrations - a.registrations);
     }
 
-    return result;
+    return filteredEvents;
 }
 
+function makeEventCard(event){
+    const eventCard = document.createElement('div');
+    eventCard.className = 'event-card';
 
 
-function createEventCard(event) {
-    const card = document.createElement('div');
-    card.className = 'event-card';
-
-    const isSaved = state.lineup.has(event.id);
-
-    const cardTop = document.createElement('div');
-    cardTop.className = 'card-top';
-
-    const eventName = document.createElement('div');
-    eventName.className = 'event-name';
-    eventName.textContent = event.name;
-
-    const bookmarkBtn = document.createElement('button');
-    bookmarkBtn.className = 'bookmark-btn' + (isSaved ? ' saved' : ''); 
-    bookmarkBtn.title = isSaved ? 'Remove from Favourites' : 'Add to Favourites';
-    bookmarkBtn.textContent = isSaved ? '-' : '+';
-    bookmarkBtn.addEventListener('click', function() { toggleLineup(event.id); }); 
-
-    cardTop.appendChild(eventName);
-    cardTop.appendChild(bookmarkBtn);
-
-    const categoryTags = document.createElement('div');
-    categoryTags.className = 'category-tag';
-    categoryTags.textContent = event.category;
-
-    const cardDetails = document.createElement('div');
-    cardDetails.className = 'card-details';
-    cardDetails.innerHTML = `
-    <div class="detail-item">
-        <span class="detail-label">Day</span>
-        <span class="detail-value">${event.day}</span>
-    </div>
-    <div class="detail-item">
-        <span class="detail-label">Time</span>
-        <span class="detail-value">${event.time}</span>
-    </div>
-    <div class="detail-item full-width">
-        <span class="detail-label">Venue</span>
-        <span class="detail-value">${event.venue}</span>
+    eventCard.innerHTML=`
+    <div>
+        <div class = "card-heading">
+            <span class = "event-name">${event.name}</span> <button class = "bookmark-button">${lineupEvents.has(event.id) ? "-" : "+"}</button>
+        </div>
+        
+        <div class = "category-tag">${event.category}</div>
+        
+        <div class = "card-details">
+            <div>Day ${event.day} </div>
+            <div>Time ${event.time} </div>
+        </div>
+        
+        <div class = "card-details">
+            <div>Venue ${event.venue} </div>
+        </div>
+        <div class = "card-registrations">
+            <div>${event.registrations} Registrations</div>    
+        </div>
     </div>`;
 
-    const cardFooter = document.createElement('div');
-    cardFooter.className = 'card-footer';
+    const cardHeading = eventCard.querySelector(".card-heading");
+    const bookmarkButton = cardHeading.querySelector(".bookmark-button");
+    bookmarkButton.addEventListener('click',() => toggleEventInLineup(event.id));
 
-    const regLabel = document.createElement('div');
-    regLabel.className = 'registrations';
-    regLabel.innerHTML = event.registrations.toLocaleString() + ' registered';
-
-    cardFooter.appendChild(regLabel);
-
-    card.appendChild(cardTop);
-    card.appendChild(categoryTags);
-    card.appendChild(cardDetails);
-    card.appendChild(cardFooter);
-
-    return card;
+    return eventCard;
 }
 
+function renderEventCards(){
+    
+    const eventsGrid = document.getElementById('events-grid');
+    const noResultBox = document.getElementById('no-results');
+    const eventCount = document.getElementById('event-count');
 
+    eventsGrid.innerHTML=''
 
-function renderCards() {
-    const structure = document.getElementById('eventsGrid');
-    const noResults = document.getElementById('noResults');
-    const countBadge = document.getElementById('countBadge');
+    let filteredEvents = filterSort()
 
-    structure.innerHTML = '';  
-
-    const filtered = getFilteredAndSorted();
-
-    if (filtered.length === 0) {
-        noResults.style.display = 'block';
-        countBadge.textContent = '0';
+    if (filteredEvents.length === 0){
+        eventCount.innerHTML = `${filteredEvents.length}`
+        eventsGrid.style.display = 'none' ;
+        noResultBox.style.display = 'block';
         return;
     }
+    
+    eventsGrid.style.display = 'flex' ;
+    noResultBox.style.display = 'none';
+    eventCount.innerHTML = `${filteredEvents.length}`
+    
+    filteredEvents.forEach((event) =>{
+        const card = makeEventCard(event);
+        eventsGrid.appendChild(card);
 
-    noResults.style.display = 'none';
-    countBadge.textContent = filtered.length;
-
-    filtered.forEach(function(event) {
-        structure.appendChild(createEventCard(event));
-    });
+    } )
 }
 
-
-
-function toggleLineup(eventId) {
-    if (state.lineup.has(eventId)) {
-        state.lineup.delete(eventId);
+function toggleEventInLineup(eventId){
+    if  (lineupEvents.has(eventId)){
+        lineupEvents.delete(eventId);
     } else {
-        state.lineup.add(eventId);
+        lineupEvents.add(eventId);
     }
-    document.getElementById('statSaved').textContent = state.lineup.size;
-    renderLineup();   
-    renderCards();
+
+    renderEventLineup(); // to render event lineup
+    renderEventCards(); //to change the button icon
+
 }
 
-function renderLineup() {
-    const lineupList = document.getElementById('lineupList');
-    const savedEvents = events.filter(function(e) { return state.lineup.has(e.id); });
+function renderEventLineup(){
+    const lineupGrid = document.getElementById('lineup-grid');
+    const emptyLineup = document.getElementById('empty-lineup');
+    const lineupCount = document.getElementById('lineup-count');
+    lineupCount.innerHTML =`${lineupEvents.size}`;
 
-    lineupList.innerHTML = '';   
+    lineupGrid.innerHTML = '';
 
-    if (savedEvents.length === 0) {
-        const empty = document.createElement('div');
-        empty.id = 'lineupEmpty';   
-        empty.textContent = 'Click + on a card to save it.';
-        lineupList.appendChild(empty);
+    if (lineupEvents.size === 0){
+        emptyLineup.style.display = "block";
+        emptyLineup.textContent = 'Nothing in Lineup';
+        lineupGrid.style.display = "none";
         return;
     }
 
-    savedEvents.forEach(function(event) {
-        const item = document.createElement('div');
-        item.className = 'lineup-item';
+    emptyLineup.style.display = "none";
+    lineupGrid.style.display = "flex";
+    
+    function makeLineupCard(event){
+        const lineupCard = document.createElement("div");
+        lineupCard.className = "lineup-card";
 
-        const info = document.createElement('div');
+        lineupCard.innerHTML=`
+        <div>
+            <div class = "lineup-heading">
+                <span class = "lineup-name">${event.name}</span> <button class = "remove-button">x</button>
+            </div>
+            
+            <div class = "category-tag">${event.category}</div>
+            
+            <div class = "lineup-details">
+                <div>Day ${event.day}, Time ${event.time}, Venue ${event.venue} </div>
+            </div>
+        </div>`;
 
-        const name = document.createElement('div');
-        name.className   = 'lineup-item-name';
-        name.textContent = event.name;
+        const lineupCardHeading = lineupCard.querySelector(".lineup-heading");
+        const removeButton = lineupCardHeading.querySelector(".remove-button");
+        removeButton.addEventListener('click',() => toggleEventInLineup(event.id));
 
-        const details = document.createElement('div');
-        details.className   = 'lineup-item-details';
-        details.textContent = 'Day ' + event.day + ' · ' + event.time + ' · ' + event.venue;
 
-        info.appendChild(name);
-        info.appendChild(details);
+        return lineupCard;
+    }
 
-        const removeBtn = document.createElement('button');
-        removeBtn.className   = 'lineup-remove';
-        removeBtn.textContent = 'x';
-        removeBtn.title       = 'Remove';
-        removeBtn.addEventListener('click', function() { toggleLineup(event.id); });
+    let eventsInLineup = events.filter((e) => lineupEvents.has(e.id));
 
-        item.appendChild(info);
-        item.appendChild(removeBtn);
-        lineupList.appendChild(item);
-    });
+    eventsInLineup.forEach( (event) => {
+        lineupGrid.appendChild(makeLineupCard(event));
+    })
 }
 
 
+function getSearchAndSort() {    
+    const searchBar = document.getElementById('search-bar');
+    searchBar.addEventListener('input',(e) => {
+        searchValue = e.target.value;
+        renderEventCards();
+    })
 
-function renderStats() {
-    document.getElementById('statTotal').textContent = events.length;
-
-    const totalRegs = events.reduce(function(acc, event) {
-        return acc + event.registrations;
-    }, 0);
-    document.getElementById('statRegs').textContent = totalRegs.toLocaleString();
-
-    const categoryTotals = {};
-    events.forEach(function(event) {
-        if (!categoryTotals[event.category]) { categoryTotals[event.category] = 0; }
-        categoryTotals[event.category] += event.registrations;
-    });
-
-    const topCategory = Object.entries(categoryTotals).sort(function(a, b) {
-        return b[1] - a[1];
-    })[0];
-    document.getElementById('statPopular').textContent = topCategory[0];
+    const sortBy = document.getElementById('sort-by-selected');
+    sortBy.addEventListener('change',(e)=> {
+        sortSelected = e.target.value;
+        renderEventCards();
+    })
 }
 
-
-function setupListeners() {
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        state.search = e.target.value;
-        renderCards();
-    });
-
-    document.getElementById('sortSelect').addEventListener('change', function(e) {
-        state.sort = e.target.value;
-        renderCards();
-    });
-}
-
-
-function init() {
-    renderStats();
-    buildFilterButtons();
-    renderCards();
-    renderLineup();
-    setupListeners();
-}
-
-init();
+makeFilterButtons()
+filterSort()
+getSearchAndSort()
+renderEventCards()
+renderEventLineup()
