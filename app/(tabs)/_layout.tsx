@@ -1,35 +1,30 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs } from "expo-router";
+import {Ionicons} from "@expo/vector-icons";
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+const tabLayout = () => (
+    <Tabs screenOptions={{headerShown: false}} >
+        <Tabs.Screen
+            name="index"
+            options={{
+                title: 'Home',
+                tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="home-outline" color={color} />}} />
+        <Tabs.Screen
+            name="events"
+            options={{
+                title: 'Events',
+                tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="albums-outline" color={color} />,}} />
+        <Tabs.Screen
+            name="lineup"
+            options={{
+                title: 'Your Lineup' ,
+                tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="archive-outline" color={color} />,}} />
+        <Tabs.Screen
+            name="onboarding"
+            options={{
+                title: 'Onboarding',
+                tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="add-outline" color={color} />,}} />
     </Tabs>
-  );
-}
+)
+
+export default tabLayout
