@@ -19,11 +19,6 @@ const tabLayout = () => (
             options={{
                 title: 'Your Lineup' ,
                 tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="archive-outline" color={color} />,}} />
-        <Tabs.Screen
-            name="onboarding"
-            options={{
-                title: 'Onboarding',
-                tabBarIcon: ({ color }:{color:string}) => <Ionicons size={28} name="add-outline" color={color} />,}} />
     </Tabs>
 )
 

@@ -1,14 +1,29 @@
 import { Text, View, StyleSheet , Pressable} from "react-native";
 import { Link } from "expo-router";
+import {ImageBackground } from "expo-image";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Hello There</Text>
-      <Link href="/onboarding" asChild>
-        <Pressable style = {styles.press}><Text>Onboarding</Text></Pressable>
-      </Link>
-    </View>
+  <ImageBackground source={require("@/assets/images/bg.jpg")} style={styles.backgroundImage}>
+
+        <View style={styles.container}>
+          <Text style={styles.text}>Hello There</Text>
+            <View>
+                <Link href={'/(tabs)/events'} asChild >
+                    <Pressable >
+                        <MaterialCommunityIcons name='fire' size={300} color="red" />
+                    </Pressable>
+                </Link>
+            </View>
+          <Link href = "/(tabs)/lineup" asChild>
+              <Pressable >
+                  <MaterialCommunityIcons name="archive-check" color="lightblue" size={250} />
+              </Pressable>
+          </Link>
+        </View>
+  </ImageBackground>
   )
 }
 
@@ -23,8 +38,15 @@ const styles = StyleSheet.create({
       },
   press:{
     borderWidth:2,
-    borderColor: "black",
+    borderColor: "#ffffff",
     borderRadius:2,
-    color:"black"
+    color: "#ffffff"
+  },
+  text:{
+      color: "#ffffff",
+  },
+  backgroundImage:{
+    ...StyleSheet.absoluteFillObject,
+
   }
 })

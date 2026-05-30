@@ -1,2 +1,2 @@
 
-export const url  = "https://lillie-nondoubtable-hellishly.ngrok-free.dev"
+export const url  = "https://recruitments.bits-dvm.org"

@@ -1,5 +1,7 @@
 import {create} from 'zustand';
 import {url} from "@/constants/get_data";
+import {createJSONStorage, persist} from "zustand/middleware";
+import {storageAdapter} from "@/storage/mmkv";
 
 export type Event = {
     id: number,
@@ -26,16 +28,19 @@ type LineupStore = {
     removeLineupEvent: (id: number) =>  Promise <void>
 }
 
-export const useEventStore = create<EventStore>((set) => ({
-    events: [],
+export const useEventStore = create<EventStore>() (
+    persist((set, get:any ) => (
+        {
+    events: [] as Event[],
     error: null,
 
     fetchEvents: async () => {
+        if ( get().events.length  > 0) return ;
+
         set({error: null})
+
         try {
-            const result = await fetch(url + "/events",{
-                headers: {'ngrok-skip-browser-warning': 'true'}
-            })
+            const result = await fetch(url + "/events")
             const data = await result.json()
             set({events: data})
         } catch (e: any) {
@@ -43,23 +48,33 @@ export const useEventStore = create<EventStore>((set) => ({
         }
     }
 
-}))
+    }
+    )
+    ,{
+        name: "event-store",
+        storage: createJSONStorage(() => storageAdapter),
+        }
+    )
+)
 
-export const useLineupStore = create<LineupStore>((set, get) => ({
+
+export const useLineupStore = create<LineupStore>()(
+    persist(
+    (set, get) => ({
     lineupIds: [],
     lineupEvents: [],
     error: null,
 
-    addLineupEvent:async (id: number) => {
-        set((state) => ({
-            lineupIds: [...state.lineupIds, id]
-        }))
+    addLineupEvent : async (id: number) => {
+        set({
+            lineupIds: [...get().lineupIds, id]
+        })
         await get().fetchLineupEvents()
     },
     removeLineupEvent: async (id: number) => {
-        set((state) => ({
-            lineupIds: state.lineupIds.filter(e => e !== id)
-        }))
+        set({
+            lineupIds: get().lineupIds.filter(e => e !== id)
+        })
         await get().fetchLineupEvents()
     },
 
@@ -67,7 +82,7 @@ export const useLineupStore = create<LineupStore>((set, get) => ({
         try {
             const data1 = get().lineupIds
             const result = await Promise.all(
-                data1.map((id: number) => fetch(url + `/events/${id}`))
+                data1.map((id: number) => fetch(`${url}/events/${id}`))
             )
             const data: Event[] = await Promise.all(
                 result.map((res) => {
@@ -81,4 +96,11 @@ export const useLineupStore = create<LineupStore>((set, get) => ({
         }
     }
 
-}))
+    })
+    ,
+        {
+            name: "lineup-store",
+            storage: createJSONStorage(() => storageAdapter),
+        }
+)
+)

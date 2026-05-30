@@ -4,25 +4,21 @@ import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
 import {Image} from "expo-image";
 
-
 type props =  {
     event : Event,
     onPress : () => void,
 }
 
 
-
-const Card  = ({event,onPress} : props) => {
-    const {lineupIds , addLineupEvent , removeLineupEvent} = useLineupStore();
-    const isInLineup = lineupIds.includes(event.id)
+const LineupCard = ({event,onPress}:props ) => {
+    const {removeLineupEvent} = useLineupStore()
 
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.wrapper}>
-
                 <Image
                     source={
-                        {uri: `${url}/events/${event.id}0/image`}
+                        {uri : `${url}/events/${event.id}0/image`}
                     }
                     style={styles.image}
                 />
@@ -31,30 +27,16 @@ const Card  = ({event,onPress} : props) => {
                     <Text style={styles.heading}>{event.name}</Text>
                     <View>
                         <Text style={styles.text}>{event.day} - {event.time} - {event.venue}</Text>
-                        <Text style={styles.text}>Registration - {event.registrations}</Text>
                     </View>
 
                     <View>
-                        <TouchableOpacity style={
-                            [
-                                styles.lineupButton,
-                                isInLineup?
-                                    {borderColor: '#915353', backgroundColor: '#f0c0c0'}
-                                    :{borderColor: '#4d47a8', backgroundColor: '#a7a2eb'}
-
-                            ]
-                        }
-                                          onPress={async () => {
-                                if (isInLineup) {
+                        <TouchableOpacity
+                            style={styles.removeButton}
+                            onPress={
+                                async () => {
                                     await removeLineupEvent(event.id)
-                                } else {
-                                    await addLineupEvent(event.id)
-                                }
-                        }}>
-                            <Text
-                                style={[isInLineup?{color:"red"}:{color:"blue"},styles.lineupButtonText]}>
-                                {isInLineup?"-":"+"}
-                            </Text>
+                                }}>
+                            <Text style={styles.removeButtonText}>-</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -64,14 +46,13 @@ const Card  = ({event,onPress} : props) => {
     )
 }
 
-export default Card
+export default LineupCard
 
 const styles = StyleSheet.create({
     wrapper:{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: "space-around",
         padding: 10,
         margin : 10,
         marginHorizontal: "10%",
@@ -83,7 +64,7 @@ const styles = StyleSheet.create({
     },
     container: {
         display: 'flex',
-        flex:1,
+        flexShrink:1,
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'column',
@@ -92,7 +73,6 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontSize: 20,
-        justifyContent: "center",
         fontWeight: 'bold',
         color: "black",
         margin : 10,
@@ -103,19 +83,22 @@ const styles = StyleSheet.create({
         color: "black",
         padding : 4,
     },
-    lineupButton: {
+    removeButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#1c85c7',
         minWidth:20,
         minHeight:20,
-        alignItems: 'center',
-        color: '#1c85c7',
-        margin : 1,
-        padding : 1,
-        borderWidth:1,
+        borderWidth: 1,
         borderRadius:3,
+        borderColor: '#915353',
+        backgroundColor:'#f0c0c0',
 
     },
-    lineupButtonText:{
-        fontWeight: '500',
+    removeButtonText : {
+        color: 'red',
+        fontWeight: "500",
+
     },
     image:{
         width: 100,
