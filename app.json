@@ -2,7 +2,7 @@
   "expo": {
     "name": "FestExp",
     "slug": "FestExp",
-    "version": "1.0.0",
+    "version": "1.0.",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "festexp",
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode" : 5,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

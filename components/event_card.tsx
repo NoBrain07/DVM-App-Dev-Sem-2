@@ -1,23 +1,39 @@
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
-import React from 'react'
+import React, {memo, useEffect, useState} from 'react'
 import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
 import {Image} from "expo-image";
+import {Ionicons} from "@expo/vector-icons";
 
 
 type props =  {
     event : Event,
-    onPress : () => void,
+    // onPress : () => void,
 }
 
 
 
-const Card  = ({event,onPress} : props) => {
+const Card  = ({event} : props) => {
     const {lineupIds , addLineupEvent , removeLineupEvent} = useLineupStore();
     const isInLineup = lineupIds.includes(event.id)
 
+    const [active,setActive] = useState<boolean>(false)
+    const [description, setDescription] = useState<string|null>(null)
+
+    const toggleActive = () => {
+        setActive((prevState) => !prevState);
+    }
+
+    useEffect(()=>{
+        fetch(`${url}/events/${event.id}`)
+            .then(res => res.json())
+            .then(data => data.description)
+            .then(data => setDescription(data))
+    } , [event])
+
+
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={toggleActive}>
             <View style={styles.wrapper}>
 
                 <Image
@@ -31,40 +47,42 @@ const Card  = ({event,onPress} : props) => {
                     <Text style={styles.heading}>{event.name}</Text>
                     <View>
                         <Text style={styles.text}>{event.day} - {event.time} - {event.venue}</Text>
-                        <Text style={styles.text}>Registration - {event.registrations}</Text>
+                        <Text style={styles.text}>Registrations - {event.registrations}</Text>
                     </View>
 
                     <View>
-                        <TouchableOpacity style={
-                            [
-                                styles.lineupButton,
-                                isInLineup?
-                                    {borderColor: '#915353', backgroundColor: '#f0c0c0'}
-                                    :{borderColor: '#4d47a8', backgroundColor: '#a7a2eb'}
-
-                            ]
-                        }
-                                          onPress={async () => {
+                        <TouchableOpacity
+                            onPress={async () => {
                                 if (isInLineup) {
                                     await removeLineupEvent(event.id)
                                 } else {
                                     await addLineupEvent(event.id)
                                 }
                         }}>
-                            <Text
-                                style={[isInLineup?{color:"red"}:{color:"blue"},styles.lineupButtonText]}>
-                                {isInLineup?"-":"+"}
-                            </Text>
+
+                            <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={24}/>
+
                         </TouchableOpacity>
 
                     </View>
+                {
+                    active?
+                        (
+                            <View style={styles.container}>
+                                <Text style={styles.description}>
+                                    {(description === null) ? "Sorry, No description found." : description.toString()}
+                                </Text>
+                            </View>
+                        )
+                        :null
+                }
                 </View>
             </View>
         </TouchableOpacity>
     )
 }
 
-export default Card
+export default memo(Card)
 
 const styles = StyleSheet.create({
     wrapper:{
@@ -74,9 +92,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10,
         margin : 10,
-        marginHorizontal: "10%",
         borderWidth: 1,
-        borderColor: "#46084d",
+        borderColor: "#35073d",
         borderStyle: "solid",
         minWidth:300,
         minHeight:100,
@@ -103,22 +120,13 @@ const styles = StyleSheet.create({
         color: "black",
         padding : 4,
     },
-    lineupButton: {
-        minWidth:20,
-        minHeight:20,
-        alignItems: 'center',
-        color: '#1c85c7',
-        margin : 1,
-        padding : 1,
-        borderWidth:1,
-        borderRadius:3,
-
-    },
-    lineupButtonText:{
-        fontWeight: '500',
-    },
     image:{
         width: 100,
         height: 150
+    },
+    description: {
+        fontSize: 13,
+        fontWeight: 400 ,
+
     }
 })
