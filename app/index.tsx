@@ -1,10 +1,9 @@
 import {StyleSheet, FlatList, Text, TextInput, View,TouchableOpacity,ListRenderItem } from 'react-native'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {JSX, useCallback, useEffect, useState} from 'react'
 import Card from "@/components/event_card";
 import {Event ,useEventStore,useLineupStore} from "@/storage/storage";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
-
 
 const EventsTab = () => {
     const {events  , error, fetchEvents} = useEventStore()
@@ -20,6 +19,7 @@ const EventsTab = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [search, setSearch] = useState('');
     const [bookmarked, setBookmarked] = useState(false);
+    const [day, setDay] = useState(0);
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -40,13 +40,28 @@ const EventsTab = () => {
         events
             .filter(event => event.name.toLowerCase().includes(search.toLowerCase()))
             .filter(event => bookmarked ? lineupIds.includes(event.id):1)
+            .filter(event => event.day === day)
 
 
     if (error !== null) {
         return (
-            <Text style={styles.errorStyle}>
+            <Text style={styles.errorStyle} >
                 {error}
             </Text>
+        )
+    }
+
+    const sidebarButtons:JSX.Element[] = [];
+
+    for (let i:number =0 ; i < 4 ; i++ ) {
+        sidebarButtons.push(
+            <TouchableOpacity onPress={() => setDay(i)} key={`day${i}`}>
+                <View style={styles.sidebarButton} >
+                    <Text>
+                        DAY - {i}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 
@@ -57,7 +72,7 @@ const EventsTab = () => {
             <View style={styles.searchBox}>
 
                   <TextInput
-                      style={styles.searchBar}
+                      style={[styles.searchBar]}
                       placeholder="Search ..."
                       placeholderTextColor="black"
                       value={search}
@@ -68,8 +83,14 @@ const EventsTab = () => {
                       <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={24} color="black" />
                   </TouchableOpacity>
 
+            </View>
+
+            <View style={styles.sidebar}>
+
+                {sidebarButtons}
 
             </View>
+
             {(filteredEvents.length !== 0) ?
                 (<FlatList<Event>
                     data={filteredEvents}
@@ -117,7 +138,28 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         textAlign: 'center',
 
-    }
+    },
+    sidebar: {
+        position:"absolute",
+        flexDirection:"column",
+        top:'40%',
+        zIndex:10,
+        justifyContent:"space-between",
+        alignItems:'center',
+
+    },
+    sidebarButton: {
+        paddingVertical:10,
+        paddingRight:10,
+        marginVertical:5,
+        backgroundColor:"#f1f1f1",
+        borderWidth:1,
+        borderColor:"grey",
+        borderBottomRightRadius:5,
+        borderTopRightRadius:5,
+
+
+    },
 
 
 })

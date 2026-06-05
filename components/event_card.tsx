@@ -83,6 +83,7 @@ const Card  = ({event} : props) => {
 }
 
 export default memo(Card)
+//              ^ this is to make the last render of each card to be taken instead of rerendering each and every card
 
 const styles = StyleSheet.create({
     wrapper:{
