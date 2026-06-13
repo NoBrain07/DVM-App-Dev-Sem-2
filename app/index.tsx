@@ -4,8 +4,12 @@ import Card from "@/components/event_card";
 import {Event ,useEventStore,useLineupStore} from "@/storage/storage";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
+import {RelativePathString, router} from "expo-router";
+import {ImageBackground} from "expo-image";
 
 const EventsTab = () => {
+
+
     const {events  , error, fetchEvents} = useEventStore()
     const { lineupIds,fetchLineupEvents } = useLineupStore()
 
@@ -32,7 +36,21 @@ const EventsTab = () => {
     }
 
     const renderItem =useCallback<ListRenderItem<Event>> (
-        ( {item}) => <Card event={item}/>,[])
+        ( {item}) =>
+            <Card
+                event={item}
+                onPress={
+                () =>
+                    router.push(
+                        {
+                            pathname:`event/[id]` as RelativePathString, // puts its
+                            params:{id:item.id}
+                        }
+                        )
+                }
+
+
+            />,[])
 
     const keyExtractor = (item: Event) => item.id.toString()
 
@@ -52,15 +70,18 @@ const EventsTab = () => {
     }
 
     const sidebarButtons:JSX.Element[] = [];
+    const sidebarBackground = require(`@/assets/images/day_bg.png`)
 
     for (let i:number =0 ; i < 4 ; i++ ) {
         sidebarButtons.push(
             <TouchableOpacity onPress={() => setDay(i)} key={`day${i}`}>
-                <View style={styles.sidebarButton} >
-                    <Text>
-                        DAY - {i}
-                    </Text>
+            <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:90} : {}]} >
+
+                <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
+                    <Text style={{fontSize:12,fontWeight:'semibold',color:"white"}}>DAY</Text>
+                    <Text style={{fontSize:23,fontWeight:'condensedBold',color:'white'}}>{i}</Text>
                 </View>
+            </ImageBackground>
             </TouchableOpacity>
         )
     }
@@ -68,20 +89,30 @@ const EventsTab = () => {
 
     return (
         <SafeAreaView style={{flex:1}}>
+        <ImageBackground source={require(`@/assets/images/background.png`)} style={{flex:1}}>
 
+            <View style={styles.heading}>
+                <TouchableOpacity style={{flex:1}}>
+                    <Ionicons name={"home"} size={24} color="white" />
+                </TouchableOpacity>
+
+                <Text style={styles.headingText}>EVENTS</Text>
+
+                <TouchableOpacity style={{flex:1}} onPress={toggleBookmarked}>
+                  <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={24} color="white" />
+                </TouchableOpacity>
+
+            </View>
             <View style={styles.searchBox}>
 
                   <TextInput
                       style={[styles.searchBar]}
                       placeholder="Search ..."
-                      placeholderTextColor="black"
+                      placeholderTextColor="white"
                       value={search}
                       onChangeText={setSearch}
                   />
 
-                  <TouchableOpacity onPress={toggleBookmarked}>
-                      <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={24} color="black" />
-                  </TouchableOpacity>
 
             </View>
 
@@ -105,6 +136,7 @@ const EventsTab = () => {
                 :
                 (<Text style={styles.errorStyle}>No Events Match your Search</Text>)
             }
+        </ImageBackground>
         </SafeAreaView>
       )
 }
@@ -112,19 +144,34 @@ const EventsTab = () => {
 export default EventsTab
 
 const styles = StyleSheet.create({
+    heading:{
+        flexDirection:"row",
+        marginTop:10,
+        justifyContent:"space-between",
+        alignItems:"center",
+    },
+    headingText:{
+        flex:8,
+        fontSize:30,
+        fontWeight:'bold',
+        color:'white',
+        textAlign:"center"
+    },
     searchBox:{
         justifyContent:"space-between",
         alignItems:"center",
         gap:5,
         borderRadius:20,
         borderWidth:2,
-        borderColor:"grey",
+        borderColor:"white",
         margin:10,
-        padding:10,
+        paddingHorizontal:10,
+        paddingVertical:7,
         flexDirection:"row",
+        fontWeight:'semibold'
     },
     searchBar : {
-        minWidth:"60%",
+        color:"white",
     },
     contentContainer: {
         display: 'flex',
@@ -133,6 +180,7 @@ const styles = StyleSheet.create({
     errorStyle: {
         flex:1,
         fontSize: 18,
+        color:'white',
         alignItems: "center",
         textAlignVertical:"center",
         justifyContent: "center",
@@ -142,24 +190,24 @@ const styles = StyleSheet.create({
     sidebar: {
         position:"absolute",
         flexDirection:"column",
-        top:'40%',
+        top:'20%',
+        left:-4,
         zIndex:10,
         justifyContent:"space-between",
-        alignItems:'center',
+        alignItems:'flex-start',
 
     },
     sidebarButton: {
-        paddingVertical:10,
-        paddingRight:10,
-        marginVertical:5,
-        backgroundColor:"#f1f1f1",
-        borderWidth:1,
-        borderColor:"grey",
-        borderBottomRightRadius:5,
-        borderTopRightRadius:5,
-
-
+        flex:1,
+        width:70,
+        height:24,
+        justifyContent:"center",
+        alignItems:"center",
     },
-
+    sidebarButtonImage: {
+        flex:1,
+        alignItems:"center",
+        justifyContent:"center",
+    },
 
 })

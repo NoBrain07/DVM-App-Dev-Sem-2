@@ -1,39 +1,37 @@
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
-import React, {memo, useEffect, useState} from 'react'
+import React, {memo, useState} from 'react'
 import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
-import {Image} from "expo-image";
+import {Image, ImageBackground} from "expo-image";
 import {Ionicons} from "@expo/vector-icons";
 
 
 type props =  {
     event : Event,
-    // onPress : () => void,
+    onPress : () => void,
 }
 
 
 
-const Card  = ({event} : props) => {
+const Card  = ({event,onPress} : props) => {
     const {lineupIds , addLineupEvent , removeLineupEvent} = useLineupStore();
     const isInLineup = lineupIds.includes(event.id)
 
-    const [active,setActive] = useState<boolean>(false)
-    const [description, setDescription] = useState<string|null>(null)
+    const activeBackground = require(`@/assets/images/card_bg.png`)
+    const inactiveBackground = require(`@/assets/images/card_inactive.png`)
+
+    const [active, setActive] = useState(false)
 
     const toggleActive = () => {
-        setActive((prevState) => !prevState);
+        setActive(prevState => !prevState);
     }
 
-    useEffect(()=>{
-        fetch(`${url}/events/${event.id}`)
-            .then(res => res.json())
-            .then(data => data.description)
-            .then(data => setDescription(data))
-    } , [event])
-
-
     return (
-        <TouchableOpacity onPress={toggleActive}>
+        <TouchableOpacity onPress={onPress} onLongPress={toggleActive} >
+        <View>
+
+        <ImageBackground source={active?activeBackground:inactiveBackground} contentFit={"fill"} >
+
             <View style={styles.wrapper}>
 
                 <Image
@@ -65,19 +63,10 @@ const Card  = ({event} : props) => {
                         </TouchableOpacity>
 
                     </View>
-                {
-                    active?
-                        (
-                            <View style={styles.container}>
-                                <Text style={styles.description}>
-                                    {(description === null) ? "Sorry, No description found." : description.toString()}
-                                </Text>
-                            </View>
-                        )
-                        :null
-                }
                 </View>
             </View>
+        </ImageBackground>
+        </View>
         </TouchableOpacity>
     )
 }
@@ -92,10 +81,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
-        margin : 10,
-        borderWidth: 1,
-        borderColor: "#35073d",
-        borderStyle: "solid",
+        margin : 20,
+        marginBottom:30,
         minWidth:300,
         minHeight:100,
     },
