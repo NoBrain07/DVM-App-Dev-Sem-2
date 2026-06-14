@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
     textFont:{
+<<<<<<< HEAD
         fontFamily: 'GoogleSans-Regular',
     },
     headingFont:{
@@ -46,5 +47,14 @@ export const milordFont = StyleSheet.create({
     },
     book:{
         fontFamily: 'MilordBook',
+=======
+        fontFamily: 'GoogleSans_500Medium',
+    },
+    headingFont:{
+        fontFamily: 'GoogleSans_700Bold',
+    },
+    descriptionFont:{
+        fontFamily: 'GoogleSans_600SemiBold_Italic',
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
     }
 })

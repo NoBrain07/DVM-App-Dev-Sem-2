@@ -4,8 +4,12 @@ import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
 import {ImageBackground} from "expo-image";
 import {Ionicons} from "@expo/vector-icons";
+<<<<<<< HEAD
 import {DMSans, globalStyles, googleSans} from "@/constants/styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+=======
+import {globalStyles} from "@/constants/styles";
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
 
 
 type props =  {
@@ -22,13 +26,18 @@ const Card  = ({event,onPress} : props) => {
     const activeBackground = require(`@/assets/images/card_bg.png`)
 
     return (
+<<<<<<< HEAD
         <TouchableOpacity onPress={onPress} >
+=======
+        <TouchableOpacity onPress={onPress} onLongPress={toggleActive}>
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
 
         <ImageBackground source={activeBackground} contentFit={"fill"} >
 
             <View style={styles.wrapper}>
 
                 <View style={styles.container}>
+<<<<<<< HEAD
 
                     <View style={styles.title}>
                         <Text style={[styles.heading]}>{event.name}</Text>
@@ -52,6 +61,19 @@ const Card  = ({event,onPress} : props) => {
                 </View>
 
                 <View style={{alignSelf:'stretch',paddingTop:15}}>
+=======
+                    <View>
+                        <Text style={[styles.heading,globalStyles.headingFont]}>{event.name}</Text>
+                    </View>
+
+                    <View>
+                        <Text style={[{textAlign:'left'},globalStyles.descriptionFont]}>{event.category}</Text>
+                        <Text style={[styles.text,globalStyles.textFont]}> {event.time}  -  {event.venue}</Text>
+                    </View>
+
+                </View>
+                <View style={{flex: 1,alignSelf:'stretch',paddingTop:15}}>
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
                     <TouchableOpacity
                         onPress={async () => {
                             if (isInLineup) {
@@ -90,12 +112,21 @@ const styles = StyleSheet.create({
     },
     container: {
         display: 'flex',
+<<<<<<< HEAD
         flex:1,
         alignItems: 'flex-start',
         padding : 10,
         marginBottom:5,
         paddingTop:0,
         marginLeft:"12%",
+=======
+        flex:9,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding : 10,
+        paddingTop:0,
+        marginLeft:15,
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
     },
     title:{
         flex:6,
@@ -110,13 +141,19 @@ const styles = StyleSheet.create({
     },
 
     heading: {
+<<<<<<< HEAD
         ...DMSans.semiBold,
+=======
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
         fontSize: 30,
         textAlign: "left",
         color: "black",
     },
     text: {
+<<<<<<< HEAD
         ...googleSans.regular,
+=======
+>>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
         fontSize: 20,
         color: "black",
     },
