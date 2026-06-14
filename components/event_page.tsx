@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Image} from "expo-image";
+import {Image, ImageBackground} from "expo-image";
 import {url} from "@/constants/get_data";
 import { Event,useLineupStore } from "@/storage/storage"
+import {Ionicons} from "@expo/vector-icons";
+import {globalStyles} from "@/constants/styles";
 
 
 const EventPage = ({event}: { event:Event }) => {
@@ -23,7 +25,11 @@ const EventPage = ({event}: { event:Event }) => {
 
     return (
     <SafeAreaView style={{flex:1 , justifyContent:"center",alignContent:"center"}}>
+    <ImageBackground source={require(`@/assets/images/background.png`)} style={{flex:1}}>
+
         <View style={styles.wrapper}>
+        <ImageBackground source={require(`@/assets/images/card_bg.png`)}  contentFit={'cover'} >
+        <View style={{flex:1}}>
 
             <Image
                 source={
@@ -33,24 +39,9 @@ const EventPage = ({event}: { event:Event }) => {
             />
 
             <View style={styles.container}>
-                <Text style={styles.heading}>{event.name}</Text>
-                <View style={styles.details}>
-                    <Text style={styles.text}>DAY - {event.day}</Text>
-                    <Text style={styles.text}>TIME - {event.time}</Text>
-                    <Text style={styles.text}>VENUE - {event.venue.toUpperCase()}</Text>
-                    <Text style={styles.text}>Total Registrations - {event.registrations}</Text>
-                </View>
-
-                <View>
-                    <TouchableOpacity style={
-                        [
-                            styles.lineupButton,
-                            isInLineup?
-                                {borderColor: '#915353', backgroundColor: '#f0c0c0'}
-                                :{borderColor: '#4d47a8', backgroundColor: '#a7a2eb'}
-
-                        ]
-                    }
+                <View style={styles.headingContainer}>
+                    <Text style={[styles.heading,globalStyles.headingFont]}>{event.name}</Text>
+                    <TouchableOpacity style={styles.lineupButton}
                                       onPress={async () => {
                                           if (isInLineup) {
                                               await removeLineupEvent(event.id)
@@ -58,22 +49,29 @@ const EventPage = ({event}: { event:Event }) => {
                                               await addLineupEvent(event.id)
                                           }
                                       }}>
-                        <Text
-                            style={[isInLineup?{color:"red"}:{color:"blue"},styles.lineupButtonText]}>
-                            {isInLineup?"Remove From Lineup":"Add To Lineup"}
-                        </Text>
+                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={24}/>
                     </TouchableOpacity>
 
                 </View>
+                <View style={styles.details}>
+                    <Text style={styles.text}>DAY - {event.day}     |    TIME - {event.time}</Text>
+                    <Text style={styles.text}>VENUE - {event.venue.toUpperCase()}</Text>
+                    <Text style={styles.text}>Total Registrations - {event.registrations}</Text>
+                </View>
+
 
                 <View style={styles.container}>
-                    <Text style={styles.description}>
+                    <Text style={[styles.description,globalStyles.descriptionFont]}>
                         { (description === null) ? "Sorry, No description found." : description.toString() }
                     </Text>
                 </View>
             </View>
+
+        </View>
+        </ImageBackground>
         </View>
 
+    </ImageBackground>
     </SafeAreaView>
     );
 };
@@ -83,70 +81,64 @@ export default EventPage;
 
 const styles = StyleSheet.create({
     wrapper:{
+        width:"85%",
         display: 'flex',
         flexDirection: 'column',
         justifyContent: "center",
         alignItems: "center",
+        alignSelf:'center',
         padding: 10,
-        margin : 10,
-        marginHorizontal: "10%",
+        marginVertical : 10,
+        paddingBottom:0,
+        marginBottom:0,
     },
     container: {
         display: 'flex',
-        flexWrap: 'wrap',
-        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding : 15,
         margin : 10,
     },
     heading: {
-        fontSize: 25,
-        justifyContent: "center",
-        fontWeight: 'bold',
+        fontSize: 40,
+        justifyContent: "space-around",
+        alignItems: "center",
         color: "black",
         margin : 15,
+    },
+    headingContainer:{
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:'stretch',
     },
     details:{
         alignItems: "center",
         justifyContent: "center",
-        borderWidth: 1,
-        borderColor: 'lightgray',
-        borderRadius:3,
         padding : 15,
+        paddingTop:5,
         margin : 15,
+        marginTop:5,
     },
     text: {
-        fontFamily: "Roboto-SemiBold",
+        fontFamily:'GoogleSans_500Medium',
         fontSize: 15,
-        fontWeight: 400 ,
         color: "black",
-        padding : 8,
-        margin : 4,
     },
     lineupButton: {
-        minWidth:30,
-        minHeight:30,
         alignItems: 'center',
         justifyContent: "center",
-        color: '#1c85c7',
         margin : 4,
         padding : 4,
-        borderWidth:1,
-        borderRadius:3,
 
-    },
-    lineupButtonText:{
-        fontWeight: '600',
     },
     image:{
         width: "60%",
-        height: "40%"
+        height: "40%",
+        alignSelf: "center",
+        marginTop:10,
+
     },
     description: {
-        fontFamily: "Roboto-SemiBold",
         fontSize: 15,
-        fontWeight: 400 ,
-
     }
 })

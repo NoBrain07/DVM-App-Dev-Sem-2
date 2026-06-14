@@ -1,4 +1,4 @@
-import {StyleSheet, FlatList, Text, TextInput, View,TouchableOpacity,ListRenderItem } from 'react-native'
+import {StyleSheet, FlatList, Text, TextInput, View, TouchableOpacity, ListRenderItem, Pressable} from 'react-native'
 import React, {JSX, useCallback, useEffect, useState} from 'react'
 import Card from "@/components/event_card";
 import {Event ,useEventStore,useLineupStore} from "@/storage/storage";
@@ -6,6 +6,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
 import {RelativePathString, router} from "expo-router";
 import {ImageBackground} from "expo-image";
+import {globalStyles} from "@/constants/styles";
 
 const EventsTab = () => {
 
@@ -43,7 +44,7 @@ const EventsTab = () => {
                 () =>
                     router.push(
                         {
-                            pathname:`event/[id]` as RelativePathString, // puts its
+                            pathname:`event/[id]` as RelativePathString, // puts its type to specified type
                             params:{id:item.id}
                         }
                         )
@@ -74,15 +75,15 @@ const EventsTab = () => {
 
     for (let i:number =0 ; i < 4 ; i++ ) {
         sidebarButtons.push(
-            <TouchableOpacity onPress={() => setDay(i)} key={`day${i}`}>
+            <Pressable onPress={() => setDay(i)} key={`day${i}`}>
             <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:90} : {}]} >
 
                 <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
-                    <Text style={{fontSize:12,fontWeight:'semibold',color:"white"}}>DAY</Text>
-                    <Text style={{fontSize:23,fontWeight:'condensedBold',color:'white'}}>{i}</Text>
+                    <Text style={[{fontSize:12,color:"white"},globalStyles.textFont]}>DAY</Text>
+                    <Text style={[{fontSize:23,color:'white'},globalStyles.headingFont]}>{i}</Text>
                 </View>
             </ImageBackground>
-            </TouchableOpacity>
+            </Pressable>
         )
     }
 
@@ -106,7 +107,7 @@ const EventsTab = () => {
             <View style={styles.searchBox}>
 
                   <TextInput
-                      style={[styles.searchBar]}
+                      style={[styles.searchBar,globalStyles.textFont]}
                       placeholder="Search ..."
                       placeholderTextColor="white"
                       value={search}
@@ -172,6 +173,9 @@ const styles = StyleSheet.create({
     },
     searchBar : {
         color:"white",
+        alignItems:"center",
+        justifyContent:"space-between",
+
     },
     contentContainer: {
         display: 'flex',

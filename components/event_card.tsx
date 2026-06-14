@@ -2,8 +2,9 @@ import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import React, {memo, useState} from 'react'
 import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
-import {Image, ImageBackground} from "expo-image";
+import {ImageBackground} from "expo-image";
 import {Ionicons} from "@expo/vector-icons";
+import {globalStyles} from "@/constants/styles";
 
 
 type props =  {
@@ -27,46 +28,41 @@ const Card  = ({event,onPress} : props) => {
     }
 
     return (
-        <TouchableOpacity onPress={onPress} onLongPress={toggleActive} >
-        <View>
+        <TouchableOpacity onPress={onPress} onLongPress={toggleActive}>
 
         <ImageBackground source={active?activeBackground:inactiveBackground} contentFit={"fill"} >
 
             <View style={styles.wrapper}>
 
-                <Image
-                    source={
-                        {uri: `${url}/events/${event.id}0/image`}
-                    }
-                    style={styles.image}
-                />
-
                 <View style={styles.container}>
-                    <Text style={styles.heading}>{event.name}</Text>
                     <View>
-                        <Text style={styles.text}>{event.day} - {event.time} - {event.venue}</Text>
-                        <Text style={styles.text}>Registrations - {event.registrations}</Text>
+                        <Text style={[styles.heading,globalStyles.headingFont]}>{event.name}</Text>
                     </View>
 
                     <View>
-                        <TouchableOpacity
-                            onPress={async () => {
-                                if (isInLineup) {
-                                    await removeLineupEvent(event.id)
-                                } else {
-                                    await addLineupEvent(event.id)
-                                }
-                        }}>
-
-                            <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={24}/>
-
-                        </TouchableOpacity>
-
+                        <Text style={[{textAlign:'left'},globalStyles.descriptionFont]}>{event.category}</Text>
+                        <Text style={[styles.text,globalStyles.textFont]}> {event.time}  -  {event.venue}</Text>
                     </View>
+
+                </View>
+                <View style={{flex: 1,alignSelf:'stretch',paddingTop:15}}>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (isInLineup) {
+                                await removeLineupEvent(event.id)
+                            } else {
+                                await addLineupEvent(event.id)
+                            }
+                    }}>
+
+                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={30}/>
+
+                    </TouchableOpacity>
                 </View>
             </View>
+
         </ImageBackground>
-        </View>
+
         </TouchableOpacity>
     )
 }
@@ -78,33 +74,31 @@ const styles = StyleSheet.create({
     wrapper:{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10,
-        margin : 20,
+        justifyContent: "space-between",
+        alignItems: 'flex-end',
+        padding: 0,
+        margin : 10,
         marginBottom:30,
-        minWidth:300,
-        minHeight:100,
+        minWidth:320,
+        minHeight:180,
     },
     container: {
         display: 'flex',
-        flex:1,
-        justifyContent: 'space-between',
+        flex:9,
+        justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'column',
-        padding : 15,
-        margin : 10,
+        padding : 10,
+        paddingTop:0,
+        marginLeft:15,
     },
     heading: {
-        fontSize: 20,
-        justifyContent: "center",
-        fontWeight: 'bold',
+        fontSize: 30,
+        textAlign: "left",
         color: "black",
         margin : 10,
     },
     text: {
-        fontSize: 10,
-        fontWeight: 400 ,
+        fontSize: 20,
         color: "black",
         padding : 4,
     },
@@ -112,9 +106,4 @@ const styles = StyleSheet.create({
         width: 100,
         height: 150
     },
-    description: {
-        fontSize: 13,
-        fontWeight: 400 ,
-
-    }
 })
