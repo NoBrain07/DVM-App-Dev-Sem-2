@@ -6,7 +6,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
 import {RelativePathString, router} from "expo-router";
 import {ImageBackground} from "expo-image";
-import {globalStyles} from "@/constants/styles";
+import {globalStyles, googleSans, milordFont} from "@/constants/styles";
 
 const EventsTab = () => {
 
@@ -79,8 +79,8 @@ const EventsTab = () => {
             <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:90} : {}]} >
 
                 <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
-                    <Text style={[{fontSize:12,color:"white"},globalStyles.textFont]}>DAY</Text>
-                    <Text style={[{fontSize:23,color:'white'},globalStyles.headingFont]}>{i}</Text>
+                    <Text style={[{fontSize:12,color:"white",fontFamily:'MilordBook'}]}>DAY</Text>
+                    <Text style={[{fontSize:33,color:'white',fontFamily:'MilordBook'}]}>{i}</Text>
                 </View>
             </ImageBackground>
             </Pressable>
@@ -107,7 +107,7 @@ const EventsTab = () => {
             <View style={styles.searchBox}>
 
                   <TextInput
-                      style={[styles.searchBar,globalStyles.textFont]}
+                      style={[styles.searchBar]}
                       placeholder="Search ..."
                       placeholderTextColor="white"
                       value={search}
@@ -149,32 +149,32 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         marginTop:10,
         justifyContent:"space-between",
-        alignItems:"center",
+        alignItems:"flex-start",
     },
     headingText:{
+        ...milordFont.book,
         flex:8,
-        fontSize:30,
-        fontWeight:'bold',
+        fontSize:40,
         color:'white',
         textAlign:"center"
     },
     searchBox:{
-        justifyContent:"space-between",
-        alignItems:"center",
-        gap:5,
+        justifyContent:"center",
+        alignContent:"center",
         borderRadius:20,
         borderWidth:2,
         borderColor:"white",
         margin:10,
         paddingHorizontal:10,
-        paddingVertical:7,
         flexDirection:"row",
-        fontWeight:'semibold'
     },
     searchBar : {
+        ...googleSans.medium,
+        flex:1,
         color:"white",
         alignItems:"center",
-        justifyContent:"space-between",
+        justifyContent:"center",
+        textAlignVertical:"center",
 
     },
     contentContainer: {

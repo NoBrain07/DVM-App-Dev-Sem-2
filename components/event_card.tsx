@@ -4,7 +4,8 @@ import {Event,useLineupStore} from "@/storage/storage";
 import {url} from "@/constants/get_data";
 import {ImageBackground} from "expo-image";
 import {Ionicons} from "@expo/vector-icons";
-import {globalStyles} from "@/constants/styles";
+import {DMSans, globalStyles, googleSans} from "@/constants/styles";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 
 type props =  {
@@ -19,33 +20,38 @@ const Card  = ({event,onPress} : props) => {
     const isInLineup = lineupIds.includes(event.id)
 
     const activeBackground = require(`@/assets/images/card_bg.png`)
-    const inactiveBackground = require(`@/assets/images/card_inactive.png`)
-
-    const [active, setActive] = useState(false)
-
-    const toggleActive = () => {
-        setActive(prevState => !prevState);
-    }
 
     return (
-        <TouchableOpacity onPress={onPress} onLongPress={toggleActive}>
+        <TouchableOpacity onPress={onPress} >
 
-        <ImageBackground source={active?activeBackground:inactiveBackground} contentFit={"fill"} >
+        <ImageBackground source={activeBackground} contentFit={"fill"} >
 
             <View style={styles.wrapper}>
 
                 <View style={styles.container}>
-                    <View>
-                        <Text style={[styles.heading,globalStyles.headingFont]}>{event.name}</Text>
+
+                    <View style={styles.title}>
+                        <Text style={[styles.heading]}>{event.name}</Text>
                     </View>
 
-                    <View>
-                        <Text style={[{textAlign:'left'},globalStyles.descriptionFont]}>{event.category}</Text>
-                        <Text style={[styles.text,globalStyles.textFont]}> {event.time}  -  {event.venue}</Text>
+                    <View style={styles.detailContainer}>
+                        <MaterialIcons name="category" color="#000" size={20} />
+                        <Text style={styles.text}> {event.category}</Text>
+                    </View>
+
+                    <View style={styles.detailContainer}>
+                        <Ionicons name={"time"} color={"#012"} size={20}/>
+                        <Text style={styles.text}> {event.time}</Text>
+                    </View>
+
+                    <View style={styles.detailContainer}>
+                        <Ionicons name={'location'} color={"#012"} size={20}/>
+                        <Text style={styles.text}> {event.venue}</Text>
                     </View>
 
                 </View>
-                <View style={{flex: 1,alignSelf:'stretch',paddingTop:15}}>
+
+                <View style={{alignSelf:'stretch',paddingTop:15}}>
                     <TouchableOpacity
                         onPress={async () => {
                             if (isInLineup) {
@@ -84,23 +90,35 @@ const styles = StyleSheet.create({
     },
     container: {
         display: 'flex',
-        flex:9,
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex:1,
+        alignItems: 'flex-start',
         padding : 10,
+        marginBottom:5,
         paddingTop:0,
-        marginLeft:15,
+        marginLeft:"12%",
     },
+    title:{
+        flex:6,
+        marginVertical : 10,
+    },
+    detailContainer:{
+        flex:1,
+        flexDirection:'row',
+        height:35,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+
     heading: {
+        ...DMSans.semiBold,
         fontSize: 30,
         textAlign: "left",
         color: "black",
-        margin : 10,
     },
     text: {
+        ...googleSans.regular,
         fontSize: 20,
         color: "black",
-        padding : 4,
     },
     image:{
         width: 100,
