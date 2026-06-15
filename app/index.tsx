@@ -6,11 +6,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
 import {RelativePathString, router} from "expo-router";
 import {ImageBackground} from "expo-image";
-<<<<<<< HEAD
 import {globalStyles, googleSans, milordFont} from "@/constants/styles";
-=======
-import {globalStyles} from "@/constants/styles";
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
 
 const EventsTab = () => {
 
@@ -82,14 +78,9 @@ const EventsTab = () => {
             <Pressable onPress={() => setDay(i)} key={`day${i}`}>
             <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:90} : {}]} >
 
-                <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
-<<<<<<< HEAD
+                <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:5} : {} ] } >
                     <Text style={[{fontSize:12,color:"white",fontFamily:'MilordBook'}]}>DAY</Text>
                     <Text style={[{fontSize:33,color:'white',fontFamily:'MilordBook'}]}>{i}</Text>
-=======
-                    <Text style={[{fontSize:12,color:"white"},globalStyles.textFont]}>DAY</Text>
-                    <Text style={[{fontSize:23,color:'white'},globalStyles.headingFont]}>{i}</Text>
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
                 </View>
             </ImageBackground>
             </Pressable>
@@ -182,12 +173,8 @@ const styles = StyleSheet.create({
         flex:1,
         color:"white",
         alignItems:"center",
-<<<<<<< HEAD
         justifyContent:"center",
         textAlignVertical:"center",
-=======
-        justifyContent:"space-between",
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
 
     },
     contentContainer: {

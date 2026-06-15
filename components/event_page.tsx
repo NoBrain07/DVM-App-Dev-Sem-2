@@ -5,11 +5,7 @@ import {Image, ImageBackground} from "expo-image";
 import {url} from "@/constants/get_data";
 import { Event,useLineupStore } from "@/storage/storage"
 import {Ionicons} from "@expo/vector-icons";
-<<<<<<< HEAD
 import {DMSans, globalStyles, googleSans} from "@/constants/styles";
-=======
-import {globalStyles} from "@/constants/styles";
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
 
 
 const EventPage = ({event}: { event:Event }) => {
@@ -43,11 +39,7 @@ const EventPage = ({event}: { event:Event }) => {
 
             <View style={styles.container}>
                 <View style={styles.headingContainer}>
-<<<<<<< HEAD
                     <Text style={[styles.heading]}>{event.name}</Text>
-=======
-                    <Text style={[styles.heading,globalStyles.headingFont]}>{event.name}</Text>
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
                     <TouchableOpacity style={styles.lineupButton}
                                       onPress={async () => {
                                           if (isInLineup) {
@@ -62,21 +54,13 @@ const EventPage = ({event}: { event:Event }) => {
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.text}>DAY - {event.day}     |    TIME - {event.time}</Text>
-<<<<<<< HEAD
                     <Text style={[styles.text,{textAlign:'center'}]}>VENUE - {event.venue.toUpperCase()}</Text>
-=======
-                    <Text style={styles.text}>VENUE - {event.venue.toUpperCase()}</Text>
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
                     <Text style={styles.text}>Total Registrations - {event.registrations}</Text>
                 </View>
 
 
                 <View style={styles.container}>
-<<<<<<< HEAD
                     <Text style={[styles.description]}>
-=======
-                    <Text style={[styles.description,globalStyles.descriptionFont]}>
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
                         { (description === null) ? "Sorry, No description found." : description.toString() }
                     </Text>
                 </View>
@@ -115,10 +99,7 @@ const styles = StyleSheet.create({
         margin : 10,
     },
     heading: {
-<<<<<<< HEAD
         ...DMSans.semiBold,
-=======
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
         fontSize: 40,
         justifyContent: "space-around",
         alignItems: "center",
@@ -139,11 +120,7 @@ const styles = StyleSheet.create({
         marginTop:5,
     },
     text: {
-<<<<<<< HEAD
         ...googleSans.medium,
-=======
-        fontFamily:'GoogleSans_500Medium',
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
         fontSize: 15,
         color: "black",
     },
@@ -155,7 +132,6 @@ const styles = StyleSheet.create({
 
     },
     image:{
-<<<<<<< HEAD
         width: 200,
         height: 300,
         alignSelf: "center",
@@ -164,15 +140,10 @@ const styles = StyleSheet.create({
     },
     description: {
         ...googleSans.italic,
-=======
         width: "60%",
         height: "40%",
         alignSelf: "center",
         marginTop:10,
-
-    },
-    description: {
->>>>>>> a4d5d475bc69e599f8bb0dd936392d94b7ce9e22
         fontSize: 15,
     }
 })
