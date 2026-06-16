@@ -6,7 +6,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
 import {RelativePathString, router} from "expo-router";
 import {ImageBackground} from "expo-image";
-import {globalStyles, googleSans, milordFont} from "@/constants/styles";
+import {googleSans, milordFont} from "@/constants/styles";
 
 const EventsTab = () => {
 
@@ -76,11 +76,11 @@ const EventsTab = () => {
     for (let i:number =0 ; i < 4 ; i++ ) {
         sidebarButtons.push(
             <Pressable onPress={() => setDay(i)} key={`day${i}`}>
-            <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:90} : {}]} >
+            <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:110} : {}]} >
 
-                <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:5} : {} ] } >
-                    <Text style={[{fontSize:12,color:"white",fontFamily:'MilordBook'}]}>DAY</Text>
-                    <Text style={[{fontSize:33,color:'white',fontFamily:'MilordBook'}]}>{i}</Text>
+                <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
+                    <Text style={[{fontSize:18,color:"white",fontFamily:'MilordBook',textAlign:'center'}]}>DAY</Text>
+                    <Text style={[{fontSize:33,color:'white',fontFamily:'MilordBook',textAlign:'justify'}]}>{i}</Text>
                 </View>
             </ImageBackground>
             </Pressable>
@@ -93,26 +93,25 @@ const EventsTab = () => {
         <ImageBackground source={require(`@/assets/images/background.png`)} style={{flex:1}}>
 
             <View style={styles.heading}>
-                <TouchableOpacity style={{flex:1}}>
-                    <Ionicons name={"home"} size={24} color="white" />
-                </TouchableOpacity>
-
                 <Text style={styles.headingText}>EVENTS</Text>
 
                 <TouchableOpacity style={{flex:1}} onPress={toggleBookmarked}>
-                  <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={24} color="white" />
+                  <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={32} color="white" />
                 </TouchableOpacity>
 
             </View>
             <View style={styles.searchBox}>
-
-                  <TextInput
-                      style={[styles.searchBar,globalStyles.textFont]}
-                      placeholder="Search ..."
-                      placeholderTextColor="white"
-                      value={search}
-                      onChangeText={setSearch}
-                  />
+                    <Ionicons name={'search'} size={24} color="white" />
+                    <TextInput
+                        style={[styles.searchBar]}
+                        placeholder="Search"
+                        placeholderTextColor="white"
+                        value={search}
+                        onChangeText={setSearch}
+                        returnKeyType="search"
+                        selectionHandleColor={'#3b3b3b'}
+                        cursorColor={'#4b4b4b'}
+                    />
 
 
             </View>
@@ -153,15 +152,17 @@ const styles = StyleSheet.create({
     },
     headingText:{
         ...milordFont.book,
-        flex:8,
-        fontSize:40,
+        flex:9,
+        fontSize:45,
         color:'white',
         textAlign:"center"
     },
     searchBox:{
         justifyContent:"center",
-        alignContent:"center",
-        borderRadius:20,
+        alignItems:"center",
+        backgroundColor:'#1B1B1B',
+        height:60,
+        borderRadius:12,
         borderWidth:2,
         borderColor:"white",
         margin:10,
@@ -170,16 +171,17 @@ const styles = StyleSheet.create({
     },
     searchBar : {
         ...googleSans.medium,
+        includeFontPadding:false,
+        flexDirection:"row",
+        fontSize:22,
         flex:1,
         color:"white",
-        alignItems:"center",
-        justifyContent:"center",
-        textAlignVertical:"center",
-
+        textAlignVertical:'center',
     },
     contentContainer: {
         display: 'flex',
         alignSelf: "center",
+        gap:10,
     },
     errorStyle: {
         flex:1,
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
         position:"absolute",
         flexDirection:"column",
         top:'20%',
-        left:-4,
+        left:-20,
         zIndex:10,
         justifyContent:"space-between",
         alignItems:'flex-start',
@@ -203,10 +205,14 @@ const styles = StyleSheet.create({
     },
     sidebarButton: {
         flex:1,
-        width:70,
-        height:24,
+        width:90,
+        height:20,
+        paddingHorizontal:30,
         justifyContent:"center",
-        alignItems:"center",
+        alignItems:'flex-end',
+        shadowColor:"black",
+        shadowOpacity:0.6,
+        shadowRadius:10,
     },
     sidebarButtonImage: {
         flex:1,

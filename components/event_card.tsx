@@ -1,10 +1,7 @@
-import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
-import React, {memo, useState} from 'react'
-import {Event,useLineupStore} from "@/storage/storage";
-import {url} from "@/constants/get_data";
-import {ImageBackground} from "expo-image";
-import {Ionicons} from "@expo/vector-icons";
-import {DMSans, globalStyles, googleSans} from "@/constants/styles";
+import { StyleSheet, Text, View ,TouchableOpacity,Image, ImageBackground} from 'react-native'
+import React, {memo} from 'react'
+import {Event,useLineupStore} from "@/storage/storage";import {Ionicons} from "@expo/vector-icons";
+import {DMSans,  googleSans} from "@/constants/styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 
@@ -19,12 +16,13 @@ const Card  = ({event,onPress} : props) => {
     const {lineupIds , addLineupEvent , removeLineupEvent} = useLineupStore();
     const isInLineup = lineupIds.includes(event.id)
 
-    const activeBackground = require(`@/assets/images/card_bg.png`)
+    const activeBackground = require(`@/assets/images/card_inactive.png`)
+    const tear = require('@/assets/images/tear.png')
 
     return (
         <TouchableOpacity onPress={onPress} >
 
-        <ImageBackground source={activeBackground} contentFit={"fill"} >
+        <ImageBackground source={activeBackground} resizeMode={'stretch'} style={styles.background} imageStyle={{resizeMode:'repeat',width:'100%',height:300}} >
 
             <View style={styles.wrapper}>
 
@@ -67,7 +65,9 @@ const Card  = ({event,onPress} : props) => {
                 </View>
             </View>
 
+
         </ImageBackground>
+            <Image source={tear} style={{width:"100%",height:20}} resizeMode={'stretch'} />
 
         </TouchableOpacity>
     )
@@ -77,23 +77,26 @@ export default memo(Card)
 //              ^ this is to make the last render of each card to be taken instead of rerendering each and every card
 
 const styles = StyleSheet.create({
+    background:{
+        overflow:"hidden",
+        // marginBottom:20,
+    },
     wrapper:{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: "space-between",
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         padding: 0,
-        margin : 10,
-        marginBottom:30,
+        margin : 5,
+        marginBottom:0,
         minWidth:320,
-        minHeight:180,
     },
     container: {
         display: 'flex',
         flex:1,
         alignItems: 'flex-start',
         padding : 10,
-        marginBottom:5,
+        marginBottom:4,
         paddingTop:0,
         marginLeft:"12%",
     },

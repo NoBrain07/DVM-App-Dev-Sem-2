@@ -65,8 +65,10 @@ const EventPage = ({event}: { event:Event }) => {
                     </Text>
                 </View>
             </View>
-
         </View>
+
+
+
         </ImageBackground>
         </View>
 
