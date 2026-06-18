@@ -6,7 +6,8 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Ionicons} from '@expo/vector-icons';
 import {RelativePathString, router} from "expo-router";
 import {ImageBackground} from "expo-image";
-import {googleSans, milordFont} from "@/constants/styles";
+import {googleSans, milordFont} from "@/themes/styles";
+import {scaleWidth,scaleHeight} from "@/themes/scaling"
 
 const EventsTab = () => {
 
@@ -79,8 +80,8 @@ const EventsTab = () => {
             <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:110} : {}]} >
 
                 <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
-                    <Text style={[{fontSize:18,color:"white",fontFamily:'MilordBook',textAlign:'center'}]}>DAY</Text>
-                    <Text style={[{fontSize:33,color:'white',fontFamily:'MilordBook',textAlign:'justify'}]}>{i}</Text>
+                    <Text style={[styles.sidebarButtonText,{fontSize:scaleHeight(21),textAlign:'center'}]}>DAY</Text>
+                    <Text style={[styles.sidebarButtonText,{fontSize:scaleHeight(37),textAlign:'justify'}]}>{i}</Text>
                 </View>
             </ImageBackground>
             </Pressable>
@@ -89,19 +90,19 @@ const EventsTab = () => {
 
 
     return (
-        <SafeAreaView style={{flex:1}}>
-        <ImageBackground source={require(`@/assets/images/background.png`)} style={{flex:1}}>
+        <SafeAreaView style={{flex:1,backgroundColor:'black'}}>
+        <ImageBackground source={require(`@/assets/images/background.png`)} contentFit={"fill"}>
 
             <View style={styles.heading}>
                 <Text style={styles.headingText}>EVENTS</Text>
 
                 <TouchableOpacity style={{flex:1}} onPress={toggleBookmarked}>
-                  <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={32} color="white" />
+                  <Ionicons name={bookmarked ? "bookmarks":"bookmarks-outline"} size={scaleHeight(29)} color="white" />
                 </TouchableOpacity>
 
             </View>
             <View style={styles.searchBox}>
-                    <Ionicons name={'search'} size={24} color="white" />
+                    <Ionicons name={'search'} size={scaleHeight(20)} color="white" />
                     <TextInput
                         style={[styles.searchBar]}
                         placeholder="Search"
@@ -128,6 +129,8 @@ const EventsTab = () => {
                     keyExtractor={keyExtractor}
                     contentContainerStyle={styles.contentContainer}
 
+                    style={{marginHorizontal:'3%'}}
+
                     renderItem={renderItem}
 
                     refreshing={refreshing}
@@ -146,14 +149,14 @@ export default EventsTab
 const styles = StyleSheet.create({
     heading:{
         flexDirection:"row",
-        marginTop:10,
+        marginTop:scaleHeight(18),
         justifyContent:"space-between",
         alignItems:"flex-start",
     },
     headingText:{
         ...milordFont.book,
         flex:9,
-        fontSize:45,
+        fontSize:scaleHeight(45),
         color:'white',
         textAlign:"center"
     },
@@ -161,19 +164,19 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         backgroundColor:'#1B1B1B',
-        height:60,
+        height:scaleHeight(54),
         borderRadius:12,
         borderWidth:2,
         borderColor:"white",
-        margin:10,
-        paddingHorizontal:10,
+        margin:scaleHeight(10),
+        paddingHorizontal:scaleWidth(10),
         flexDirection:"row",
     },
     searchBar : {
         ...googleSans.medium,
         includeFontPadding:false,
         flexDirection:"row",
-        fontSize:22,
+        fontSize:scaleHeight(22),
         flex:1,
         color:"white",
         textAlignVertical:'center',
@@ -181,11 +184,11 @@ const styles = StyleSheet.create({
     contentContainer: {
         display: 'flex',
         alignSelf: "center",
-        gap:10,
+        rowGap:scaleHeight(13) ,
     },
     errorStyle: {
         flex:1,
-        fontSize: 18,
+        fontSize: scaleHeight(18),
         color:'white',
         alignItems: "center",
         textAlignVertical:"center",
@@ -197,19 +200,19 @@ const styles = StyleSheet.create({
         position:"absolute",
         flexDirection:"column",
         top:'20%',
-        left:-20,
-        zIndex:10,
+        left:-scaleWidth(22),
+        zIndex:11,
         justifyContent:"space-between",
         alignItems:'flex-start',
 
     },
     sidebarButton: {
         flex:1,
-        width:90,
-        height:20,
-        paddingHorizontal:30,
+        width:scaleWidth(90),
+        height:scaleHeight(21),
+        paddingLeft:scaleWidth(23),
         justifyContent:"center",
-        alignItems:'flex-end',
+        alignItems:'center',
         shadowColor:"black",
         shadowOpacity:0.6,
         shadowRadius:10,
@@ -219,5 +222,9 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
     },
+    sidebarButtonText: {
+        ...milordFont.book,
+        color:'white'
+    }
 
 })

@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View ,TouchableOpacity,Image, ImageBackground} from 'react-native'
-import React, {memo} from 'react'
-import {Event,useLineupStore} from "@/storage/storage";import {Ionicons} from "@expo/vector-icons";
-import {DMSans,  googleSans} from "@/constants/styles";
+import React, {memo} from 'react';
+import {Event,useLineupStore} from "@/storage/storage";
+import {Ionicons} from "@expo/vector-icons";
+import {DMSans,  googleSans} from "@/themes/styles";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import {scaleWidth,scaleHeight} from "@/themes/scaling"
 
 
 type props =  {
@@ -21,15 +23,15 @@ const Card  = ({event,onPress} : props) => {
 
     return (
         <TouchableOpacity onPress={onPress} >
-
-        <ImageBackground source={activeBackground} resizeMode={'stretch'} style={styles.background} imageStyle={{resizeMode:'repeat',width:'100%',height:300}} >
+        <Image source={require('@/assets/images/paperclip.png')} resizeMode={'contain'} style={styles.paperclip}/>
+        <ImageBackground source={activeBackground} resizeMode={'stretch'} style={styles.background} imageStyle={{resizeMode:'repeat',width:'100%',height:scaleHeight(320)}} >
 
             <View style={styles.wrapper}>
 
                 <View style={styles.container}>
 
                     <View style={styles.title}>
-                        <Text style={[styles.heading]}>{event.name}</Text>
+                        <Text style={[styles.heading]} >{event.name}</Text>
                     </View>
 
                     <View style={styles.detailContainer}>
@@ -49,7 +51,7 @@ const Card  = ({event,onPress} : props) => {
 
                 </View>
 
-                <View style={{alignSelf:'stretch',paddingTop:15}}>
+                <View style={{}}>
                     <TouchableOpacity
                         onPress={async () => {
                             if (isInLineup) {
@@ -59,7 +61,7 @@ const Card  = ({event,onPress} : props) => {
                             }
                     }}>
 
-                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={30}/>
+                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={scaleHeight(32)}/>
 
                     </TouchableOpacity>
                 </View>
@@ -67,7 +69,7 @@ const Card  = ({event,onPress} : props) => {
 
 
         </ImageBackground>
-            <Image source={tear} style={{width:"100%",height:20}} resizeMode={'stretch'} />
+        <Image source={tear} style={{width:"100%",height:20}} resizeMode={'stretch'} />
 
         </TouchableOpacity>
     )
@@ -77,8 +79,16 @@ export default memo(Card)
 //              ^ this is to make the last render of each card to be taken instead of rerendering each and every card
 
 const styles = StyleSheet.create({
+    paperclip:{
+        position:"absolute",
+        zIndex:10,
+        width:scaleWidth(20),
+        top:scaleHeight(-38),
+        left:scaleWidth(40),
+    },
     background:{
         overflow:"hidden",
+        width: scaleWidth(364),
         // marginBottom:20,
     },
     wrapper:{
@@ -87,44 +97,39 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: 'flex-start',
         padding: 0,
-        margin : 5,
-        marginBottom:0,
-        minWidth:320,
+        marginRight : scaleWidth(20),
+        marginTop:scaleHeight(30),
+        marginLeft:scaleWidth(75),
+        marginBottom:scaleHeight(15),
     },
     container: {
         display: 'flex',
         flex:1,
         alignItems: 'flex-start',
-        padding : 10,
-        marginBottom:4,
-        paddingTop:0,
-        marginLeft:"12%",
     },
     title:{
         flex:6,
-        marginVertical : 10,
     },
     detailContainer:{
         flex:1,
         flexDirection:'row',
-        height:35,
+        height:scaleHeight(35),
         alignItems:'center',
         justifyContent:'center',
     },
 
     heading: {
         ...DMSans.semiBold,
-        fontSize: 30,
+        fontSize: scaleHeight(27),
         textAlign: "left",
         color: "black",
+        includeFontPadding:false,
+        rowGap:scaleHeight(1),
+
     },
     text: {
         ...googleSans.regular,
-        fontSize: 20,
+        fontSize: scaleHeight(20),
         color: "black",
-    },
-    image:{
-        width: 100,
-        height: 150
     },
 })

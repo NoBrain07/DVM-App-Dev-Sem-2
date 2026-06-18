@@ -5,7 +5,8 @@ import {Image, ImageBackground} from "expo-image";
 import {url} from "@/constants/get_data";
 import { Event,useLineupStore } from "@/storage/storage"
 import {Ionicons} from "@expo/vector-icons";
-import {DMSans, globalStyles, googleSans} from "@/constants/styles";
+import {DMSans, googleSans} from "@/themes/styles";
+import {scaleWidth,scaleHeight} from "@/themes/scaling"
 
 
 const EventPage = ({event}: { event:Event }) => {
@@ -48,7 +49,7 @@ const EventPage = ({event}: { event:Event }) => {
                                               await addLineupEvent(event.id)
                                           }
                                       }}>
-                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={24}/>
+                        <Ionicons name={isInLineup? "bookmark":"bookmark-outline"} color={"#012"} size={scaleHeight(20)} />
                     </TouchableOpacity>
 
                 </View>
@@ -77,7 +78,7 @@ const EventPage = ({event}: { event:Event }) => {
     );
 };
 
-export default EventPage;
+export default memo(EventPage);
 
 
 const styles = StyleSheet.create({
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
         width:"85%",
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: "center",
+        justifyContent: 'space-around',
         alignItems: "center",
         alignSelf:'center',
         padding: 10,
@@ -134,8 +135,8 @@ const styles = StyleSheet.create({
 
     },
     image:{
-        width: 200,
-        height: 300,
+        width: scaleWidth(200),
+        height: scaleHeight(250),
         alignSelf: "center",
         marginTop:40,
 
