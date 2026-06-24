@@ -10,7 +10,7 @@ import {googleSans, milordFont} from "@/themes/styles";
 import {scaleWidth,scaleHeight} from "@/themes/scaling"
 
 const EventsTab = () => {
-
+    const background=require(`@/assets/images/background.png`);
 
     const {events  , error, fetchEvents} = useEventStore()
     const { lineupIds,fetchLineupEvents } = useLineupStore()
@@ -77,7 +77,7 @@ const EventsTab = () => {
     for (let i:number =0 ; i < 4 ; i++ ) {
         sidebarButtons.push(
             <Pressable onPress={() => setDay(i)} key={`day${i}`}>
-            <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:110} : {}]} >
+            <ImageBackground source={sidebarBackground} contentFit={"fill"} style={[styles.sidebarButtonImage,i===day ? {width:scaleWidth(110)} : {}]} >
 
                 <View style={ [ styles.sidebarButton , i===day ? {position:'relative',left:10} : {} ] } >
                     <Text style={[styles.sidebarButtonText,{fontSize:scaleHeight(21),textAlign:'center'}]}>DAY</Text>
@@ -90,8 +90,8 @@ const EventsTab = () => {
 
 
     return (
-        <SafeAreaView style={{flex:1,backgroundColor:'black'}}>
-        <ImageBackground source={require(`@/assets/images/background.png`)} contentFit={"fill"}>
+        <SafeAreaView style={{flex:1,backgroundColor:'black'}} edges={['top','bottom']}>
+        <ImageBackground source={background} contentFit={"fill"} style={{flex:1}}>
 
             <View style={styles.heading}>
                 <Text style={styles.headingText}>EVENTS</Text>
@@ -129,7 +129,8 @@ const EventsTab = () => {
                     keyExtractor={keyExtractor}
                     contentContainerStyle={styles.contentContainer}
 
-                    style={{marginHorizontal:'3%'}}
+
+                    style={{marginHorizontal:'3%',}}
 
                     renderItem={renderItem}
 
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
         flexDirection:"column",
         top:'20%',
         left:-scaleWidth(22),
-        zIndex:11,
+        zIndex:19,
         justifyContent:"space-between",
         alignItems:'flex-start',
 

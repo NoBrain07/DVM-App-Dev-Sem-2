@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         position:"absolute",
         zIndex:10,
         width:scaleWidth(20),
-        top:scaleHeight(-38),
+        top:scaleHeight(-42),
         left:scaleWidth(40),
     },
     background:{
